@@ -4,6 +4,7 @@ package com.example.testSql.controllers;
 import com.example.testSql.entities.Students;
 import com.example.testSql.services.StudentsService;
 import jakarta.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/students")
 @CrossOrigin
 public class StudentsController {
 
-    @Autowired
-    private StudentsService studentsService;
+    private final StudentsService studentsService;
 
     @PostMapping("/create")
     public void addNewStudent(@RequestBody Students student){
@@ -57,7 +58,7 @@ public class StudentsController {
 //        return phoneNumber;
 //    }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public void updateStudent(@RequestBody Students student){
         if (student == null) {
             throw new IllegalArgumentException("Student is missing");
