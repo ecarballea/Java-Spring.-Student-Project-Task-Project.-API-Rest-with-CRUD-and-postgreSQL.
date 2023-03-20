@@ -18,17 +18,20 @@ import java.sql.SQLException;
 public class TestSqlApplication {
 	String user = "postgres";
 
-	String pass = "Ke welta";
+	String pass = "123456";
 
 	Connection connection;
 	{
 		try {
 			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TestDB",
 					user, pass);
+			System.out.println("Connected successfully");
 		} catch (SQLException ex) {
+			System.out.println("Unconnected");
 			throw new RuntimeException(ex);
+
 		}
-		System.out.println("Connected successfully");
+
 	}
 
 	public static void main(String[] args) {
