@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface StudentsRepository extends CrudRepository<Students, UUID> {
     @Query("select (count(s) > 0) from Students s where s.name = ?1")
     boolean existsByName(String name);
-    Students findByName(String name);
+    Optional<Students> findByName(String name);
 
     @Override
     Optional<Students> findById(UUID uuid);

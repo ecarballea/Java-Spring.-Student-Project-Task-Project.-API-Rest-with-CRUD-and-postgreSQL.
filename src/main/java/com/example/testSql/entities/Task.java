@@ -1,5 +1,6 @@
 package com.example.testSql.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,10 +28,9 @@ public class Task {
     @Column(name = "number")
     private Integer number;
 
-
-
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "project_id")
+    @JsonIgnore
     private Project project;
 
 }

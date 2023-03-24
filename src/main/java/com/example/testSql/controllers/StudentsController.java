@@ -8,20 +8,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/students")
 @CrossOrigin
 public class StudentsController {
 
-    private final StudentsService studentsService;
+    @Autowired
+    private  StudentsService studentsService;
 
-    @PostMapping("/create")
-    public void addNewStudent(@RequestBody Students student){
+    @PostMapping("/new")
+    public void addNewStudent(@RequestBody @Nonnull Students student){
         if (student == null) {
             throw new IllegalArgumentException("Student is missing");
         } else{
@@ -29,25 +30,34 @@ public class StudentsController {
         }
     }
 
-    @GetMapping("/read")
+    @GetMapping("/findAll")
     public Iterable<Students> getAllStudents(){
 
         Iterable<Students> studentsList = studentsService.getAll();
-        if (studentsList != null) {
+        if (((ArrayList)studentsList).size() != 0) {
             return studentsList;
         } else {
             return null;
         }
     }
 
-    @GetMapping("/read/{studentID}")
-    public Optional<Students> getStudentByID(@Nonnull @PathVariable UUID studentID){
-        Optional<Students> student = studentsService.getStudentByID(studentID);
-        return student;
+    @PostMapping("/find")
+    public Optional<Students> getStudentByID(@RequestBody @Nonnull Students student){
+        Optional<Students> student_result;
+        if (student.getId() != null){
+            student_result = studentsService.getStudentByID(student.getId());
+        } else if (student.getName() != null) {
+            student_result = studentsService.getStudentByName(student.getName());
+        } else {
+            throw new IllegalArgumentException("Student is missing");
+        }
+
+
+        return student_result;
     }
 
-//    @GetMapping("/read/{name}")
-//    public Students getStudentByName(@Nonnull @PathVariable String name){
+//    @PostMapping("/find")
+//    public Students getStudentByName(@RequestBody @PathVariable String name){
 //        Students student = studentsService.getStudentByName(name);
 //        return student;
 //    }
@@ -67,9 +77,10 @@ public class StudentsController {
         }
     }
 
-    @DeleteMapping("/delete/{studentID}")
-    public void deleteStudentByID(@PathVariable UUID studentID){
-        studentsService.deleteStudentByID(studentID);
+    @DeleteMapping("/delete")
+    public void deleteStudent(@RequestBody Students student){
+
+        studentsService.deleteStudent(student);
     }
 
 }
