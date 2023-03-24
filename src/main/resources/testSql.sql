@@ -10,8 +10,8 @@ CREATE TABLE student (
 CREATE TABLE project (
   id UUID NOT NULL,
    project_name VARCHAR(255),
-   start TIMESTAMP WITHOUT TIME ZONE,
-   "end" VARCHAR(255),
+   start_date date,
+   end_date date,
    students_id UUID,
    CONSTRAINT pk_project PRIMARY KEY (id)
 );
