@@ -6,24 +6,21 @@ import com.example.testSql.exceptions.StudentIDAlreadyExistException;
 import com.example.testSql.exceptions.StudentIDException;
 import com.example.testSql.repositories.StudentsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class StudentsService {
 
-    private final StudentsRepository studentsRepository;
+    @Autowired
+    private StudentsRepository studentsRepository;
 
     public void addNewStudent(Students student) {
-        if (studentsRepository.existsById(student.getId())) {
-            throw new StudentIDAlreadyExistException("Student ID '"+student.getId().toString()+"' already exist");
-        } else {
-            studentsRepository.save(student);
-        }
-
+        studentsRepository.save(student);
 
     }
 
@@ -48,25 +45,28 @@ public class StudentsService {
 
     }
 
-    public void deleteStudentByID(UUID studentID) {
-        if (studentsRepository.existsById(studentID)) {
-            studentsRepository.deleteById(studentID);
+    public void deleteStudent(Students student) {
+        if (studentsRepository.existsById(student.getId())) {
+            studentsRepository.deleteById(student.getId());
         } else {
-            throw new StudentIDException("Student ID '"+studentID.toString()+"' does not exist");
+            throw new StudentIDException("Student ID '"+student.getId().toString()+"' does not exist");
         }
 
     }
 
-    public Students getStudentByName(String name) {
+    public Optional<Students> getStudentByName(String name) {
+
+        Optional<Students> student_result;
         if (studentsRepository.existsByName(name)) {
-            return studentsRepository.findByName(name);
+            student_result =  studentsRepository.findByName(name);
         } else {
             throw new StudentIDException("The student '"+name+"' does not exist");
         }
+        return student_result;
     }
 
     public Integer getPhoneNumberByName(String name) {
-        Students student = getStudentByName(name);
-        return student.getPhoneNumber();
+        Optional<Students> student = getStudentByName(name);
+        return student.get().getPhoneNumber();
     }
 }
